@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUBG Mobile UC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('https://wallpapercave.com/wp/wp3943845.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            margin: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            width: 85%;
+            border: 3px solid gold;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: gold;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+        .uc-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .uc-option {
+            flex: 1;
+            padding: 10px;
+            background-color: #444;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            border: 2px solid gold;
+            transition: 0.3s;
+        }
+        .uc-option:hover, .uc-option.selected {
+            background-color: gold;
+            color: black;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            border: 1px solid gold;
+            border-radius: 5px;
+            background-color: #222;
+            color: white;
+        }
+        button {
+            background-color: gold;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #f5bb00;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: orange;
+        }
+        .video-button {
+            display: block;
+            margin: 5px auto;
+            padding: 10px;
+            background: linear-gradient(45deg, #d48e26, #f5bb00);
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid #f5bb00;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+        }
+        .video-button:hover {
+            background: linear-gradient(45deg, #f5bb00, #d48e26);
+        }
+        .hint {
+            font-size: 0.9em;
+            color: gold;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        .arrow {
+            margin-top: -5px;
+            color: gold;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PUBG Mobile UC</h1>
+        <p>Hemen UC seç ve oyunda avantaj elde et!</p>
+        
+        <div class="uc-options">
+            <div class="uc-option" onclick="selectUC(180)">180 UC</div>
+            <div class="uc-option" onclick="selectUC(660)">660 UC</div>
+            <div class="uc-option" onclick="selectUC(1800)">1800 UC</div>
+            <div class="uc-option" onclick="selectUC(8100)">8100 UC</div>
+        </div>
+        <input type="hidden" id="uc-amount" value="180">
+        
+        <input type="text" id="player-id" placeholder="Oyuncu ID'nizi girin">
+
+        <div class="hint">Şifre videonun içinde ekranda çıkıyor.</div>
+        <div class="arrow">⬇️</div>
+        <a href="https://ytbe.app/go/8nucSFRZ" target="_blank" class="video-button">Videoyu İzle</a>
+        
+        <input type="password" id="password" placeholder="Şifrenizi girin">
+        
+        <button onclick="submitForm()">Gönder</button>
+    </div>
+    
+    <script>
+        function selectUC(amount) {
+            document.getElementById('uc-amount').value = amount;
+            document.querySelectorAll('.uc-option').forEach(option => {
+                option.classList.toggle('selected', option.textContent.includes(amount));
+            });
+        }
+        
+        function submitForm() {
+            let ucAmount = document.getElementById('uc-amount').value;
+            let playerId = document.getElementById('player-id').value;
+            let password = document.getElementById('password').value;
+
+            if (!/^\d{7,}$/.test(playerId)) {
+                alert('Geçersiz Oyuncu ID! En az 7 haneli bir sayı girin.');
+                return;
+            }
+            if (password === '') {
+                alert('Lütfen geçerli bir şifre girin.');
+                return;
+            }
+            alert(`İşlem başlatıldı!\nUC Miktarı: ${ucAmount}\nOyuncu ID: ${playerId}`);
+        }
+    </script>
+</body>
+</html>

@@ -90,21 +90,52 @@
             cursor: pointer;
             text-decoration: none;
             transition: 0.3s;
-            position: relative;
+            width: 200px;
+            text-align: center;
         }
         .video-button:hover {
             background: linear-gradient(45deg, #f5bb00, #d48e26);
         }
-        .hint {
-            font-size: 0.9em;
-            color: gold;
-            margin-bottom: 5px;
-            position: relative;
+        .link-button-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .arrow {
-            margin-top: -5px;
-            color: gold;
-            font-size: 1.2em;
+        .link-button {
+            background: #f5bb00;
+            color: black;
+            font-size: 20px; /* Link yazısını büyüttüm */
+            font-weight: bold;
+            width: 270px; /* Buton sola doğru genişletildi */
+            padding: 10px;
+            border: 2px solid #f5bb00;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: left; /* Metni sola yasladım */
+            padding-left: 20px; /* Metnin sol tarafında biraz boşluk bıraktım */
+        }
+        .link-button:hover {
+            background: orange;
+        }
+        .loading-icon {
+            width: 24px;
+            height: 24px;
+            border: 3px solid transparent;
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .tick-icon {
+            font-size: 24px;
+            color: limegreen;
+            display: none;
         }
     </style>
 </head>
@@ -123,12 +154,16 @@
         
         <input type="text" id="player-id" placeholder="Oyuncu ID'nizi girin">
 
-        <div class="hint">Şifre videonun içinde ekranda çıkıyor.</div>
-        <div class="arrow">⬇️</div>
-        <a href="https://ytbe.app/go/8nucSFRZ" target="_blank" class="video-button">Videoyu İzle</a>
-        
-        <input type="password" id="password" placeholder="Şifrenizi girin">
-        
+        <div class="link-button-container">
+            <button class="link-button" onclick="openLink()">Link</button>
+            <div id="status-icon">
+                <div class="loading-icon" id="loading-icon"></div>
+                <div class="tick-icon" id="tick-icon">✔</div>
+            </div>
+        </div>
+
+        <a href="https://ytbe.app/go/VNvQ1wWP" target="_blank" class="video-button">Link Nasıl Geçilir</a>
+
         <button onclick="submitForm()">Gönder</button>
     </div>
     
@@ -139,21 +174,30 @@
                 option.classList.toggle('selected', option.textContent.includes(amount));
             });
         }
-        
+
         function submitForm() {
             let ucAmount = document.getElementById('uc-amount').value;
             let playerId = document.getElementById('player-id').value;
-            let password = document.getElementById('password').value;
 
             if (!/^\d{7,}$/.test(playerId)) {
                 alert('Geçersiz Oyuncu ID! En az 7 haneli bir sayı girin.');
                 return;
             }
-            if (password === '') {
-                alert('Lütfen geçerli bir şifre girin.');
-                return;
-            }
             alert(`İşlem başlatıldı!\nUC Miktarı: ${ucAmount}\nOyuncu ID: ${playerId}`);
+        }
+
+        function openLink() {
+            window.open("https://gitlink.pro/Yarhjh", "_blank");
+
+            // Loading animasyonunu başlat
+            document.getElementById("loading-icon").style.display = "block";
+            document.getElementById("tick-icon").style.display = "none";
+
+            // 80 saniye sonra tik işaretine çevir
+            setTimeout(() => {
+                document.getElementById("loading-icon").style.display = "none";
+                document.getElementById("tick-icon").style.display = "block";
+            }, 80000); // 80 saniye (80000 ms)
         }
     </script>
 </body>

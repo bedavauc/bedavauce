@@ -20,21 +20,14 @@
         }
         .container {
             margin: auto;
-            padding: 15px;
+            padding: 20px;
             background: rgba(0, 0, 0, 0.9);
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             width: 85%;
             border: 3px solid gold;
-        }
-        h1 {
-            font-size: 2.5em;
-            color: gold;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 1em;
-            margin-bottom: 10px;
+            position: relative;
+            top: -30px;
         }
         .uc-options {
             display: flex;
@@ -51,6 +44,7 @@
             font-weight: bold;
             border: 2px solid gold;
             transition: 0.3s;
+            text-align: center;
         }
         .uc-option:hover, .uc-option.selected {
             background-color: gold;
@@ -77,72 +71,44 @@
         button:hover {
             background-color: orange;
         }
-        .video-button {
-            display: block;
-            margin: 5px auto;
-            padding: 10px;
-            background: linear-gradient(45deg, #d48e26, #f5bb00);
-            border-radius: 5px;
+        #video-container {
+            width: 100%;
+            max-width: 560px;
+            margin: 10px auto;
+            background: black;
+            border: 3px solid gold;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            height: 200px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+        #countdown-container {
+            background: rgba(0, 0, 0, 0.85);
             color: white;
+            padding: 12px 18px;
+            border-radius: 5px;
+            font-size: 20px;
             font-weight: bold;
-            text-transform: uppercase;
-            border: 2px solid #f5bb00;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s;
-            width: 200px;
+            width: 90%;
+            max-width: 500px;
+            margin: 0 auto 10px auto;
+            border: 2px solid gold;
             text-align: center;
         }
-        .video-button:hover {
-            background: linear-gradient(45deg, #f5bb00, #d48e26);
-        }
-        .link-button-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .link-button {
-            background: #f5bb00;
-            color: black;
-            font-size: 20px; /* Link yazısını büyüttüm */
+        #countdown-text {
+            font-size: 14px;
             font-weight: bold;
-            width: 270px; /* Buton sola doğru genişletildi */
-            padding: 10px;
-            border: 2px solid #f5bb00;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-align: left; /* Metni sola yasladım */
-            padding-left: 20px; /* Metnin sol tarafında biraz boşluk bıraktım */
-        }
-        .link-button:hover {
-            background: orange;
-        }
-        .loading-icon {
-            width: 24px;
-            height: 24px;
-            border: 3px solid transparent;
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .tick-icon {
-            font-size: 24px;
-            color: limegreen;
-            display: none;
+            display: block;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>PUBG Mobile UC</h1>
-        <p>Hemen UC seç ve oyunda avantaj elde et!</p>
         
         <div class="uc-options">
             <div class="uc-option" onclick="selectUC(180)">180 UC</div>
@@ -154,30 +120,84 @@
         
         <input type="text" id="player-id" placeholder="Oyuncu ID'nizi girin">
 
-        <div class="link-button-container">
-            <button class="link-button" onclick="openLink()">Link</button>
-            <div id="status-icon">
-                <div class="loading-icon" id="loading-icon"></div>
-                <div class="tick-icon" id="tick-icon">✔</div>
-            </div>
+        <!-- Geri sayım -->
+        <div id="countdown-container">
+            <span id="countdown">05:00</span>
+            <span id="countdown-text">Video 5 dakika izledikten sonra UC gönderebilirsiniz</span>
         </div>
 
-        <a href="https://ytbe.app/go/VNvQ1wWP" target="_blank" class="video-button">Link Nasıl Geçilir</a>
+        <!-- Video -->
+        <div id="video-container">
+            <iframe id="video" src="https://www.youtube.com/embed/Jek6XsckLxU?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+        </div>
 
         <button onclick="submitForm()">Gönder</button>
     </div>
-    
+
     <script>
+        let countdownTime = 300; // 5 dakika (300 saniye)
+        let countdownInterval;
+        let player;
+
+        function updateCountdown() {
+            let minutes = Math.floor(countdownTime / 60);
+            let seconds = countdownTime % 60;
+            document.getElementById("countdown").innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startCountdown() {
+            countdownInterval = setInterval(() => {
+                if (countdownTime > 0) {
+                    countdownTime--;
+                    updateCountdown();
+                } else {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+        }
+
+        function stopCountdown() {
+            clearInterval(countdownInterval);
+        }
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('video', {
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                startCountdown();
+            } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+                stopCountdown();
+            }
+        }
+
         function selectUC(amount) {
             document.getElementById('uc-amount').value = amount;
+
             document.querySelectorAll('.uc-option').forEach(option => {
-                option.classList.toggle('selected', option.textContent.includes(amount));
+                option.classList.remove('selected');
+            });
+
+            document.querySelectorAll('.uc-option').forEach(option => {
+                if (option.textContent.includes(amount)) {
+                    option.classList.add('selected');
+                }
             });
         }
 
         function submitForm() {
             let ucAmount = document.getElementById('uc-amount').value;
             let playerId = document.getElementById('player-id').value;
+
+            if (countdownTime > 0) {
+                alert('Lütfen Videoyu 5 Dakika İzleyin');
+                return;
+            }
 
             if (!/^\d{7,}$/.test(playerId)) {
                 alert('Geçersiz Oyuncu ID! En az 7 haneli bir sayı girin.');
@@ -186,19 +206,8 @@
             alert(`İşlem başlatıldı!\nUC Miktarı: ${ucAmount}\nOyuncu ID: ${playerId}`);
         }
 
-        function openLink() {
-            window.open("https://gitlink.pro/Yarhjh", "_blank");
-
-            // Loading animasyonunu başlat
-            document.getElementById("loading-icon").style.display = "block";
-            document.getElementById("tick-icon").style.display = "none";
-
-            // 80 saniye sonra tik işaretine çevir
-            setTimeout(() => {
-                document.getElementById("loading-icon").style.display = "none";
-                document.getElementById("tick-icon").style.display = "block";
-            }, 80000); // 80 saniye (80000 ms)
-        }
+        updateCountdown();
     </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
